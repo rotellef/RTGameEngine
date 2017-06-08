@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Threading;
+using RTGameEngine.Visual;
 
 namespace RTGameEngine
 {
@@ -13,7 +14,7 @@ namespace RTGameEngine
 		private Graphics drawHandle;
 		private Thread renderThread;
 
-		private Bitmap circle;
+		private Entity dude;
 
 		public GEngine(Graphics g)
 		{
@@ -27,11 +28,15 @@ namespace RTGameEngine
 			// Start render thread
 			renderThread = new Thread(new ThreadStart(Render));
 			renderThread.Start();
+		
 		}
 
 		private void LoadAssets()
 		{
-			circle = RTGameEngine.Properties.Resources.circle;
+			dude = new Entity() {
+				Gfx = Properties.Resources.circle,
+				Position = new Point(20, 20)
+			};
 		}
 
 		public void Stop()
@@ -45,28 +50,41 @@ namespace RTGameEngine
 			long startTime = Environment.TickCount;
 
 			Bitmap frame = new Bitmap(Game.CANVAS_WIDTH, Game.CANVAS_HEIGHT);
+			
+			// The graphics instance we should use to draw sceen on
 			Graphics frameGraphics = Graphics.FromImage(frame);
 
-			while (true)
-			{
-				frameGraphics.FillRectangle(new SolidBrush(Color.Aqua), 0, 0, Game.CANVAS_WIDTH, Game.CANVAS_HEIGHT);
-
-				for (int i = 0; i < 10; i++)
+			try
+			{	
+				/**************
+				 * MASTER LOOOP
+				 **************/
+				while (true)
 				{
-					frameGraphics.DrawImage(circle, i*100, 100);
-				}
+					frameGraphics.FillRectangle(new SolidBrush(Color.Aqua), 0, 0, Game.CANVAS_WIDTH, Game.CANVAS_HEIGHT);
 
-				drawHandle.DrawImage(frame, 0, 0);
+					frameGraphics.DrawImage(dude.Gfx, dude.Position);
+					
 
-				// Benchmarking
-				framesRendered++;
-				if (Environment.TickCount >= startTime + 1000)
-				{
-					Console.WriteLine($"GEngine {framesRendered} fps");
-					framesRendered = 0;
-					startTime = Environment.TickCount;
+					// Swap buffer
+					drawHandle.DrawImage(frame, 0, 0);
+
+
+					// Benchmarking
+					framesRendered++;
+					if (Environment.TickCount >= startTime + 1000)
+					{
+						Console.WriteLine($"GEngine {framesRendered} fps");
+						framesRendered = 0;
+						startTime = Environment.TickCount;
+					}
 				}
+			}
+			catch (Exception ex)
+			{ 
+				Console.WriteLine("Exception happened while drawing to screen: " + ex.StackTrace);
 			}
 		}
 	}
 }
+

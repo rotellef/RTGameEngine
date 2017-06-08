@@ -18,6 +18,7 @@ namespace RTGameEngine
 		private GEngine gEngine;
 		public void StartGraphics(Graphics g)
 		{
+			Console.WriteLine("GEngine created and initiated with Graphics g.");
 			gEngine = new GEngine(g);
 			gEngine.Init();
 		}

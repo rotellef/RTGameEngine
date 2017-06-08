@@ -32,13 +32,10 @@ namespace RTGameEngine
 		}
 		private void GameWindow_Load(object sender, EventArgs e)
 		{
-			AllocConsole();
+		
 		}
 
-		// Allows the command line to be seen during normal execution
-		[DllImport("kernel32.dll", SetLastError = true)]
-		[return: MarshalAsAttribute(UnmanagedType.Bool)]
-		static extern bool AllocConsole();
+		
 
 	}
 }
