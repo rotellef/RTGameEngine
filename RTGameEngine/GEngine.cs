@@ -11,14 +11,17 @@ namespace RTGameEngine
 {
 	class GEngine
 	{
-		private Graphics drawHandle;
-		private Thread renderThread;
+		private static Random Rng = new Random();
 
-		private Entity dude;
+		private Graphics _drawHandle;
+		private Thread _renderThread;
+
+		private Entity _dude;
+		private List<Entity> _allEntities = new List<Entity>();
 
 		public GEngine(Graphics g)
 		{
-			drawHandle = g;
+			_drawHandle = g;
 		}
 
 		public void Init()
@@ -26,48 +29,69 @@ namespace RTGameEngine
 			LoadAssets();
 
 			// Start render thread
-			renderThread = new Thread(new ThreadStart(Render));
-			renderThread.Start();
-		
+			_renderThread = new Thread(new ThreadStart(Render));
+			_renderThread.Start();
+
 		}
 
 		private void LoadAssets()
 		{
-			dude = new Entity() {
+			_dude = new Entity()
+			{
 				Gfx = Properties.Resources.circle,
-				Position = new Point(20, 20)
+				Position = new Point(500, 500)
 			};
+			_allEntities.Add(_dude);
+
+			for (int i = 0; i < 100; i++)
+			{
+				_allEntities.Add(
+					new Entity()
+					{
+						Gfx = Properties.Resources.circle,
+						Position = new Point(Rng.Next(1, Game.CANVAS_WIDTH), Rng.Next(1, Game.CANVAS_HEIGHT))
+					}
+				);
+
+			}
 		}
 
 		public void Stop()
 		{
-			renderThread.Abort();
+			_renderThread.Abort();
 		}
 
 		private void Render()
 		{
+
 			int framesRendered = 0;
 			long startTime = Environment.TickCount;
 
 			Bitmap frame = new Bitmap(Game.CANVAS_WIDTH, Game.CANVAS_HEIGHT);
-			
+
 			// The graphics instance we should use to draw sceen on
 			Graphics frameGraphics = Graphics.FromImage(frame);
 
 			try
-			{	
+			{
 				/**************
 				 * MASTER LOOOP
 				 **************/
 				while (true)
 				{
+					Update();
+
 					frameGraphics.FillRectangle(new SolidBrush(Color.Aqua), 0, 0, Game.CANVAS_WIDTH, Game.CANVAS_HEIGHT);
 
-					frameGraphics.DrawImage(dude.Gfx, dude.Position);
-					
+					//Paint the entities
+					foreach (var ent in _allEntities)
+					{
+						frameGraphics.DrawImage(ent.Gfx, ent.Position);
+					}
+
 
 					// Swap buffer
-					drawHandle.DrawImage(frame, 0, 0);
+					_drawHandle.DrawImage(frame, 0, 0);
 
 
 					// Benchmarking
@@ -81,10 +105,23 @@ namespace RTGameEngine
 				}
 			}
 			catch (Exception ex)
-			{ 
+			{
 				Console.WriteLine("Exception happened while drawing to screen: " + ex.StackTrace);
 			}
 		}
+
+		private void Update()
+		{
+
+			foreach (var ent in _allEntities)
+			{
+				ent.Position = Randomize(ent.Position);
+
+			}
+			//Console.Write("Dude: " + dude.ToString());
+		}
+
+		public static Point Randomize(Point p) => new Point(p.X + Rng.Next(-1, 2), p.Y + Rng.Next(-1, 2));
 	}
 }
 

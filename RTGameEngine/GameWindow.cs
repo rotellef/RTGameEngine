@@ -22,8 +22,7 @@ namespace RTGameEngine
 
 		private void canvas_Paint(object sender, PaintEventArgs e)
 		{
-			Graphics g = canvas.CreateGraphics();
-			game.StartGraphics(g);
+			game.StartGraphics(canvas.CreateGraphics());
 		}
 
 		private void GameWindow_FormClosing(object sender, FormClosingEventArgs e)

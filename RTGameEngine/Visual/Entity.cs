@@ -12,5 +12,10 @@ namespace RTGameEngine.Visual
 		public Bitmap Gfx { set; get; }
 
 		public Point Position { set; get; }
+
+		public override string ToString()
+		{
+			return $"({Position.X},{Position.Y})";
+		}
 	}
 }
