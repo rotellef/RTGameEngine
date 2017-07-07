@@ -13,9 +13,6 @@ namespace RTGameEngine.Visual
 
 		public Point Position { set; get; }
 
-		public override string ToString()
-		{
-			return $"({Position.X},{Position.Y})";
-		}
+		public override string ToString() => $"({Position.X},{Position.Y})";
 	}
 }

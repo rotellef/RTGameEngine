@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 using System.Drawing;
 using System.Threading;
 using RTGameEngine.Visual;
+using static RTGameEngine.Extensions;
 
 namespace RTGameEngine
 {
 	class GEngine
 	{
-		private static Random Rng = new Random();
+		private readonly static Random Rng = new Random();
 
 		private Graphics _drawHandle;
 		private Thread _renderThread;
@@ -115,13 +116,12 @@ namespace RTGameEngine
 
 			foreach (var ent in _allEntities)
 			{
-				ent.Position = Randomize(ent.Position);
-
-			}
+				ent.Position = ent.Position.Randomize();
+            }
 			//Console.Write("Dude: " + dude.ToString());
 		}
 
-		public static Point Randomize(Point p) => new Point(p.X + Rng.Next(-1, 2), p.Y + Rng.Next(-1, 2));
+        
 	}
 }
 
