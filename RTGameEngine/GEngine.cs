@@ -64,7 +64,6 @@ namespace RTGameEngine
 
 		private void Render()
 		{
-
 			int framesRendered = 0;
 			long startTime = Environment.TickCount;
 
@@ -118,7 +117,6 @@ namespace RTGameEngine
 			{
 				ent.Position = ent.Position.Randomize();
             }
-			//Console.Write("Dude: " + dude.ToString());
 		}
 
         

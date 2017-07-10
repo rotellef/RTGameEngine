@@ -13,7 +13,8 @@ namespace RTGameEngine
 {
 	public partial class GameWindow : Form
 	{
-		private Game game = new Game();
+		private Game _game = new Game();
+        private bool _graphicsStarted = false;
 
 		public GameWindow()
 		{
@@ -22,12 +23,17 @@ namespace RTGameEngine
 
 		private void canvas_Paint(object sender, PaintEventArgs e)
 		{
-			game.StartGraphics(canvas.CreateGraphics());
+            if(!_graphicsStarted)
+            {
+			    _game.StartGraphics(canvas.CreateGraphics());
+                _graphicsStarted = true;
+
+            }
 		}
 
 		private void GameWindow_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			game.StopGame();
+			_game.StopGame();
 		}
 		private void GameWindow_Load(object sender, EventArgs e)
 		{
