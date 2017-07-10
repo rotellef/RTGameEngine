@@ -49,7 +49,7 @@ namespace RTGameEngine
 				_allEntities.Add(
 					new Entity()
 					{
-						Gfx = Properties.Resources.circle,
+						Gfx = Properties.Resources.tick,
 						Position = new Point(Rng.Next(1, Game.CANVAS_WIDTH), Rng.Next(1, Game.CANVAS_HEIGHT))
 					}
 				);
