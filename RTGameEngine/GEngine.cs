@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Threading;
 using RTGameEngine.Visual;
 using static RTGameEngine.Extensions;
+using System.Windows.Forms;
 
 namespace RTGameEngine
 {
@@ -15,14 +16,16 @@ namespace RTGameEngine
 		private readonly static Random Rng = new Random();
 
 		private Graphics _drawHandle;
+		private readonly CancellationToken _token;
 		private Thread _renderThread;
 
 		private Entity _dude;
 		private List<Entity> _allEntities = new List<Entity>();
 
-		public GEngine(Graphics g)
+		public GEngine(Graphics g, CancellationToken token)
 		{
 			_drawHandle = g;
+			_token = token;
 		}
 
 		public void Init()
@@ -57,9 +60,21 @@ namespace RTGameEngine
 			}
 		}
 
-		public void Stop()
+		internal void KeyDown(object sender, KeyEventArgs e)
 		{
-			_renderThread.Abort();
+			Console.WriteLine("Key down! " + e.KeyData);
+			switch (e.KeyData)
+			{
+				case Keys.W:
+					break;
+				case Keys.S:
+					break;
+				case Keys.A:
+					break;
+				case Keys.D:
+					break;
+
+			}
 		}
 
 		private void Render()
@@ -77,7 +92,7 @@ namespace RTGameEngine
 				/**************
 				 * MASTER LOOOP
 				 **************/
-				while (true)
+				while (!_token.IsCancellationRequested)
 				{
 					Update();
 

@@ -40,7 +40,9 @@ namespace RTGameEngine
 		
 		}
 
-		
-
+		private void KeyDownHandler(object sender, KeyEventArgs e)
+		{
+			_game.KeyDown(sender, e);
+		}
 	}
 }

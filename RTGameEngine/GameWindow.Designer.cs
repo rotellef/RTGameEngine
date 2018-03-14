@@ -47,12 +47,14 @@
 			this.ClientSize = new System.Drawing.Size(1200, 700);
 			this.Controls.Add(this.canvas);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+			this.KeyPreview = true;
 			this.MaximizeBox = false;
 			this.Name = "GameWindow";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "RT Game Engine";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GameWindow_FormClosing);
 			this.Load += new System.EventHandler(this.GameWindow_Load);
+			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.KeyDownHandler);
 			this.ResumeLayout(false);
 
 		}

@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace RTGameEngine
 {
@@ -16,16 +18,24 @@ namespace RTGameEngine
 		public const int CANVAS_HEIGHT = 700;
 
 		private GEngine gEngine;
+		private CancellationTokenSource source;
+
 		public void StartGraphics(Graphics g)
 		{
 			Console.WriteLine("GEngine created and initiated with Graphics g.");
-			gEngine = new GEngine(g);
+			source = new CancellationTokenSource();
+			gEngine = new GEngine(g, source.Token);
 			gEngine.Init();
 		}
 
 		public void StopGame()
 		{
-			gEngine.Stop();
+			source.Cancel();
+		}
+
+		internal void KeyDown(object sender, KeyEventArgs e)
+		{
+			gEngine.KeyDown(sender, e);
 		}
 	}
 }

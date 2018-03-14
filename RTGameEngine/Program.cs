@@ -16,7 +16,7 @@ namespace RTGameEngine
 		static void Main()
 		{
 			AllocConsole();
-			Console.WriteLine("STart");
+			Console.WriteLine("Start");
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new GameWindow());
