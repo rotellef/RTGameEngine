@@ -43,35 +43,35 @@ namespace RTGameEngine
 			_dude = new Entity()
 			{
 				Gfx = Properties.Resources.circle,
-				Position = new Point(500, 500)
+				Position = new Point(500, 500),
+				IsPlayer = true
 			};
 			_allEntities.Add(_dude);
 
-			for (int i = 0; i < 100; i++)
+			var tick = Properties.Resources.tick;
+			for (int i = 0; i < 1000; i++)
 			{
-				_allEntities.Add(
-					new Entity()
-					{
-						Gfx = Properties.Resources.tick,
-						Position = new Point(Rng.Next(1, Game.CANVAS_WIDTH), Rng.Next(1, Game.CANVAS_HEIGHT))
-					}
-				);
-
+				var pos = new Point(Rng.Next(1, Game.CANVAS_WIDTH), Rng.Next(1, Game.CANVAS_HEIGHT));
+				_allEntities.Add(new Entity() { Gfx = tick, Position = pos, HitBox = tick.Size });
 			}
 		}
 
 		internal void KeyDown(object sender, KeyEventArgs e)
 		{
-			Console.WriteLine("Key down! " + e.KeyData);
+			int oneStep = 5;
 			switch (e.KeyData)
 			{
 				case Keys.W:
+					_dude.Position = _dude.Position.Up(oneStep);
 					break;
 				case Keys.S:
+					_dude.Position = _dude.Position.Down(oneStep);
 					break;
 				case Keys.A:
+					_dude.Position = _dude.Position.Left(oneStep);
 					break;
 				case Keys.D:
+					_dude.Position = _dude.Position.Right(oneStep);
 					break;
 
 			}
@@ -86,6 +86,8 @@ namespace RTGameEngine
 
 			// The graphics instance we should use to draw sceen on
 			Graphics frameGraphics = Graphics.FromImage(frame);
+			frameGraphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+			//frameGraphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.Bilinear;
 
 			try
 			{
@@ -99,9 +101,10 @@ namespace RTGameEngine
 					frameGraphics.FillRectangle(new SolidBrush(Color.Aqua), 0, 0, Game.CANVAS_WIDTH, Game.CANVAS_HEIGHT);
 
 					//Paint the entities
-					foreach (var ent in _allEntities)
+					var insideCanvas = from e in _allEntities where e.IsInside(Game.CANVAS_WIDTH, Game.CANVAS_HEIGHT) select e;
+					foreach (var ent in insideCanvas)
 					{
-						frameGraphics.DrawImage(ent.Gfx, ent.Position);
+						frameGraphics.DrawImage(ent.Gfx, ent.Position.X, ent.Position.Y, ent.Gfx.Width, ent.Gfx.Height);
 					}
 
 
@@ -109,7 +112,7 @@ namespace RTGameEngine
 					_drawHandle.DrawImage(frame, 0, 0);
 
 
-					// Benchmarking
+					// Benchmarking FPS
 					framesRendered++;
 					if (Environment.TickCount >= startTime + 1000)
 					{
@@ -128,10 +131,12 @@ namespace RTGameEngine
 		private void Update()
 		{
 
-			foreach (var ent in _allEntities)
+			var npcs = from e in _allEntities where !e.IsPlayer select e;
+			foreach (var e in npcs)
 			{
-				ent.Position = ent.Position.Randomize();
-            }
+				e.Position = e.Position.Randomize();
+			}
+
 		}
 
         

@@ -31,6 +31,7 @@ namespace RTGameEngine
 		public void StopGame()
 		{
 			source.Cancel();
+			source.Dispose();
 		}
 
 		internal void KeyDown(object sender, KeyEventArgs e)
