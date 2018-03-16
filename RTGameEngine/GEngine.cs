@@ -130,11 +130,23 @@ namespace RTGameEngine
 
 		private void Update()
 		{
-
+			var start = new Point(40, 40);
 			var npcs = from e in _allEntities where !e.IsPlayer select e;
-			foreach (var e in npcs)
+			foreach (var me in npcs)
 			{
-				e.Position = e.Position.Randomize();
+				// TODO: calc direction and speed.
+				me.Position = me.Position.Randomize();
+				// Collition checks
+				var others = from i in npcs where i != me select i;
+				
+				foreach (var other in others)
+				{
+					if (me.IsCollition(other))
+					{
+						me.Position = start;
+						other.Position = start;
+					}
+				}
 			}
 
 		}
